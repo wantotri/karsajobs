@@ -1,0 +1,33 @@
+# CircleCI configuration file
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: cimg/go:1.15
+    environment:
+      GITHUB_ACCESS_TOKEN: $GITHUB_ACCESS_TOKEN
+      GO111MODULE: on
+      APP_PORT: 8080
+
+    steps:
+      - checkout
+      - run:
+          name: lint-dockerfile
+          command: docker run --rm --interactive hadolint/hadolint < Dockerfile
+
+      - run:
+          name: test-app
+          command: go test -v -short --count=1 $(go list ./...)
+
+      - run:
+          name: build-app-karsajobs
+          command: |
+            go mod download
+            mkdir /build
+            go build -o /build/ ./...
+            docker build -t ghcr.io/wantotri/karsajobs/karsajobs:latest .
+            echo $GITHUB_ACCESS_TOKEN | docker login ghcr.io -u wantotri --password-stdin
+            docker push ghcr.io/wantotri/karsajobs/karsajobs:latest
+
+# VS Code Extension Version: 1.1.1
