@@ -6,7 +6,6 @@ jobs:
     docker:
       - image: cimg/go:1.15
     environment:
-      GITHUB_ACCESS_TOKEN: $GITHUB_ACCESS_TOKEN
       GO111MODULE: "on"
       APP_PORT: 8080
 
@@ -30,7 +29,7 @@ jobs:
             mkdir ~/build
             go build -o ~/build/ ./...
             docker build -t ghcr.io/wantotri/karsajobs/karsajobs:latest .
-            docker login ghcr.io -u wantotri -p $GITHUB_ACCESS_TOKEN
+            echo ${GITHUB_ACCESS_TOKEN} | docker login ghcr.io -u wantotri --password-stdin
             docker push ghcr.io/wantotri/karsajobs/karsajobs:latest
 
 # VS Code Extension Version: 1.1.1
