@@ -7,6 +7,7 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
+      - setup_remote_docker
       - run:
           name: lint-dockerfile
           command: docker run --rm --interactive hadolint/hadolint < Dockerfile
@@ -16,7 +17,7 @@ jobs:
       - image: cimg/go:1.15
     environment:
       GITHUB_ACCESS_TOKEN: $GITHUB_ACCESS_TOKEN
-      GO111MODULE: on
+      GO111MODULE: "on"
       APP_PORT: 8080
 
     steps:
@@ -32,7 +33,7 @@ jobs:
       - image: cimg/go:1.15
     environment:
       GITHUB_ACCESS_TOKEN: $GITHUB_ACCESS_TOKEN
-      GO111MODULE: on
+      GO111MODULE: "on"
       APP_PORT: 8080
 
     steps:
