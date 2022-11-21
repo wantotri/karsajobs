@@ -12,16 +12,20 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
+
+      # lint-dockerfile berisi proses untuk menginstal hadolint dan menjalankannya terhadap berkas Dockerfile
       - run:
           name: lint-dockerfile
           command: docker run --rm --interactive hadolint/hadolint < Dockerfile
 
+      # test-app berisi perintah untuk menjalankan unit test untuk backend
       - run:
           name: test-app
           command: |
             go mod download
             go test -v -short --count=1 $(go list ./...)
 
+      # build-app-karsajobs berisi perintah untuk build dan push image ke Github Packages
       - run:
           name: build-app-karsajobs
           command: |
