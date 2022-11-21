@@ -1,0 +1,28 @@
+# CircleCI configuration file
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: cimg/node:14.21
+
+    steps:
+      - checkout
+      - setup_remote_docker
+
+      # lint-dockerfile berisi proses untuk menginstal hadolint dan menjalankannya terhadap berkas Dockerfile
+      - run:
+          name: lint-dockerfile
+          command: docker run --rm --interactive hadolint/hadolint < Dockerfile
+
+      # build-app-karsajobs berisi perintah untuk build dan push image ke Github Packages
+      - run:
+          name: build-app-karsajobs-ui
+          command: |
+            npm install
+            npm run build
+            docker build -t ghcr.io/wantotri/karsajobs/karsajobs-ui:latest .
+            echo ${GITHUB_ACCESS_TOKEN} | docker login ghcr.io -u wantotri --password-stdin
+            docker push ghcr.io/wantotri/karsajobs/karsajobs-ui:latest
+
+# VS Code Extension Version: 1.1.1
