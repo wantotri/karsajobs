@@ -30,7 +30,7 @@ jobs:
             mkdir ~/build
             go build -o ~/build/ ./...
             docker build -t ghcr.io/wantotri/karsajobs/karsajobs:latest .
-            docker login ghcr.io -u wantotri --p $GITHUB_ACCESS_TOKEN
+            docker login ghcr.io -u wantotri -p $GITHUB_ACCESS_TOKEN
             docker push ghcr.io/wantotri/karsajobs/karsajobs:latest
 
 # VS Code Extension Version: 1.1.1
